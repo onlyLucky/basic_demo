@@ -2,7 +2,7 @@
  * @Author: fg
  * @Date: 2022-08-25 11:15:26
  * @LastEditors: fg
- * @LastEditTime: 2022-08-26 10:51:44
+ * @LastEditTime: 2022-08-30 09:28:24
  * @Description: 工具函数
  */
 
@@ -59,3 +59,5 @@ const arrayIsNotEmpty = (arr)=>Array.isArray(arr) && arr.length>0
  * @return {*}
  */
 const daysDiff = (start, end)=>Math.ceil(Math.abs(start - end)/86400000)
+
+const mergeArrayAndRemoveDuplications = 
