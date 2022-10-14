@@ -1,0 +1,326 @@
+<!--
+ * @Author: fg
+ * @Date: 2022-10-14 10:23:22
+ * @LastEditors: fg
+ * @LastEditTime: 2022-10-14 10:34:37
+ * @Description: content
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="gb2312">
+  <title>pcr退火温度计算器_引物tm值计算器</title>
+  <meta name="keywords" content="pcr退火温度计算器,引物,退火,温度" />
+  <meta name="description" content="长度引物退火温度Tm值*CGC 含量 %分子重量道尔顿 (g/M)&nbsp;1个OD260等于(pmol/ml)" />
+  <meta name="viewport"
+    content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta name="format-detection content=telephone=no">
+</head>
+
+<body class="guibowebindex articleNews">
+  
+
+
+  
+  <div class="guiboweb">
+    <div class="title">
+      <h1>pcr退火温度计算器 </h1>
+    </div>
+    <div class="con">
+
+
+
+      <script>
+
+        function Calculate(form) {
+          newOligo = new Oligo(form.oligoBox.value)
+          form.oligoBox.value = newOligo.Sequence
+          // 退火温度Tm值
+          form.tmBox.value = newOligo.Tm()
+          //GC 含量
+          form.gcBox.value = newOligo.GC()
+          // 分子重量
+          form.mwBox.value = newOligo.MW()
+          // 1个OD260等于
+          form.odBox.value = newOligo.OD()
+          // 长度
+          form.lBox.value = newOligo.Sequence.length
+        }
+
+        function Oligo(theString) {
+          this.Sequence = RemoveNonBase(theString)
+          this.aCount = CountChar(theString, "A")
+          this.cCount = CountChar(theString, "C")
+          this.gCount = CountChar(theString, "G")
+          this.tCount = CountChar(theString, "T")
+          this.Tm = Tm
+          this.GC = GC
+          this.MW = MW
+          this.OD = OD
+        }
+
+        function OD() {
+          if (this.Sequence.length > 0) {
+            return Math.round(1000000 / (this.gCount * 11.7 + this.cCount * 7.3 + this.aCount * 15.4 + this.tCount * 8.8))
+          }
+          else {
+            return ""
+          }
+        }
+
+        function MW() {
+          if (this.Sequence.length > 0) {
+            return Math.round(313.2 * this.aCount + 328.2 * this.gCount + 289.2 * this.cCount + 304.2 * this.tCount - 60.96)
+          }
+          else {
+            return ""
+          }
+        }
+
+        function GC() {
+          if (this.Sequence.length > 0) {
+            return Math.round(100 * (this.gCount + this.cCount) / this.Sequence.length)
+          }
+          else {
+            return ""
+          }
+        }
+
+        function Tm() {
+          if (this.Sequence.length > 0) {
+            if (this.Sequence.length < 14) {
+              return Math.round(2 * (this.aCount + this.tCount) + 4 * (this.gCount + this.cCount))
+            }
+            else {
+              return Math.round(64.9 + 41 * ((this.gCount + this.cCount - 16.4) / this.Sequence.length))
+            }
+          }
+          else {
+            return ""
+          }
+        }
+
+        function RemoveNonBase(theString) {
+          var returnString = ""
+          theString = theString.toUpperCase()
+          for (var i = 0; i < theString.length; i++) {
+            if ((theString.charAt(i) == "A") || (theString.charAt(i) == "G") || (theString.charAt(i) == "C") || (theString.charAt(i) == "T")) {
+              returnString += theString.charAt(i)
+            }
+          }
+          return returnString
+        }
+
+        function CountChar(theString, theChar) {
+          var returnValue = 0
+          theString = theString.toUpperCase()
+          for (var i = 0; i < theString.length; i++) {
+            if (theString.charAt(i) == theChar) {
+              returnValue++
+            }
+          }
+          return returnValue
+        }
+
+        function Disallow(form) {
+          form.oligoBox.focus()
+        }
+
+      </script>
+      <style>
+        * {
+          margin: 0 auto;
+          padding: 0;
+        }
+
+        #tmhol {
+          width: 390px;
+          height: auto;
+          margin: 0 auto;
+          padding: 10px;
+          overflow: auto;
+          font-family: Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif;
+          font-size: 12px;
+          background: rgb(206, 220, 231);
+          /* Old browsers */
+          /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+          background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjY2VkY2U3IiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzU5NmE3MiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2dyYWQtdWNnZy1nZW5lcmF0ZWQpIiAvPgo8L3N2Zz4=);
+          background: -moz-linear-gradient(-45deg, rgba(206, 220, 231, 1) 0%, rgba(89, 106, 114, 1) 100%);
+          /* FF3.6+ */
+          background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, rgba(206, 220, 231, 1)), color-stop(100%, rgba(89, 106, 114, 1)));
+          /* Chrome,Safari4+ */
+          background: -webkit-linear-gradient(-45deg, rgba(206, 220, 231, 1) 0%, rgba(89, 106, 114, 1) 100%);
+          /* Chrome10+,Safari5.1+ */
+          background: -o-linear-gradient(-45deg, rgba(206, 220, 231, 1) 0%, rgba(89, 106, 114, 1) 100%);
+          /* Opera 11.10+ */
+          background: -ms-linear-gradient(-45deg, rgba(206, 220, 231, 1) 0%, rgba(89, 106, 114, 1) 100%);
+          /* IE10+ */
+          background: linear-gradient(135deg, rgba(206, 220, 231, 1) 0%, rgba(89, 106, 114, 1) 100%);
+          /* W3C */
+          filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cedce7', endColorstr='#596a72', GradientType=1);
+          /* IE6-8 fallback on horizontal gradient */
+          box-shadow: #333 2px 2px;
+          border-radius: 5px;
+        }
+
+        #tmhol p {
+          display: block;
+          width: 100%;
+          font-family: Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif;
+          font-size: 11px;
+          font-weight: bold;
+          color: #000;
+          padding-left: 5px;
+        }
+
+        #tmhol table {
+          width: 100%;
+          font-family: Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif;
+          font-size: 10px;
+          font-weight: bold;
+        }
+
+        #tmhol table td {
+          padding-top: 5px;
+          padding-bottom: 5px;
+          width: 25%;
+        }
+
+        #tmhol h3 {
+          display: block;
+          width: 100%;
+          text-align: center;
+          margin: 0;
+          padding: 5px;
+          font-family: Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif;
+          font-size: 16px;
+          background: #666;
+          color: #09F;
+          box-shadow: #000 2px 2px inset;
+          border-radius: 5px;
+        }
+
+        #tmhol .inp {
+          width: 80%;
+          margin-left: 5px;
+        }
+
+        #tmhol .button {
+          -moz-box-shadow: inset 0px 1px 0px 0px #cf866c;
+          -webkit-box-shadow: inset 0px 1px 0px 0px #cf866c;
+          box-shadow: inset 0px 1px 0px 0px #cf866c;
+          background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #d0451b), color-stop(1, #bc3315));
+          background: -moz-linear-gradient(top, #d0451b 5%, #bc3315 100%);
+          background: -webkit-linear-gradient(top, #d0451b 5%, #bc3315 100%);
+          background: -o-linear-gradient(top, #d0451b 5%, #bc3315 100%);
+          background: -ms-linear-gradient(top, #d0451b 5%, #bc3315 100%);
+          background: linear-gradient(to bottom, #d0451b 5%, #bc3315 100%);
+          filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d0451b', endColorstr='#bc3315', GradientType=0);
+          background-color: #d0451b;
+          -moz-border-radius: 3px;
+          -webkit-border-radius: 3px;
+          border-radius: 3px;
+          border: 1px solid #942911;
+          display: inline-block;
+          cursor: pointer;
+          color: #ffffff;
+          font-family: arial;
+          font-size: 13px;
+          padding: 6px 24px;
+          text-decoration: none;
+          text-shadow: 0px 1px 0px #854629;
+        }
+
+        #tmhol .button:hover {
+          background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #bc3315), color-stop(1, #d0451b));
+          background: -moz-linear-gradient(top, #bc3315 5%, #d0451b 100%);
+          background: -webkit-linear-gradient(top, #bc3315 5%, #d0451b 100%);
+          background: -o-linear-gradient(top, #bc3315 5%, #d0451b 100%);
+          background: -ms-linear-gradient(top, #bc3315 5%, #d0451b 100%);
+          background: linear-gradient(to bottom, #bc3315 5%, #d0451b 100%);
+          filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#bc3315', endColorstr='#d0451b', GradientType=0);
+          background-color: #bc3315;
+        }
+
+        #tmhol .button:active {
+          position: relative;
+          top: 1px;
+        }
+      </style>
+      </p>
+      <form action="GET">
+        <p align="center">pcr引物退火温度计算器</p>
+        <table>
+          <tbody>
+            <tr>
+              <td colspan="4">
+                <h3>在下面输入寡核苷酸序列</h3>
+              </td>
+            </tr>
+
+            <tr>
+              <td colspan="4">
+                <textarea name="oligoBox" cols="45" rows="5" class="inp" onchange="Calculate(this.form)"
+                  style="width:100%; margin:0; color:#00FF00; background-color:#000000" align="left"
+                  wrap="vitual">GAGGATCCGATT</textarea>
+              </td>
+            </tr>
+
+            <tr>
+              <td width="14%">
+                <p>长度</p>
+              </td>
+              <td width="30%"><input value="0" name="lBox" class="inp" onfocus="Disallow(this.form)" size="3"></td>
+              <td width="19%">
+                <p>退火温度Tm值</p>
+              </td>
+              <td><input name="tmBox" class="inp" onfocus="Disallow(this.form)" size="2">
+                <p>*C</p>
+              </td>
+            </tr>
+
+            <tr>
+              <td width="14%">
+                <p>GC 含量</p>
+              </td>
+              <td width="30%"><input name="gcBox" class="inp" onfocus="Disallow(this.form)" size="3">
+                <span class="highlight" id="ouHighlight__0_6TO0_0" paragraphname="paragraph0" dstinfo="0:0"
+                  srcinfo="0:6">
+                  %</span>
+              </td>
+              <td width="19%">
+                <p>分子重量</p>
+              </td>
+              <td><input name="mwBox" class="inp" onfocus="Disallow(this.form)" size="7">
+                <p>
+                  道尔顿 (g/M)</p>
+              </td>
+            </tr>
+
+            <tr>
+              <td colspan="2" align="center" width="55%">
+                <input name="Calbutton" class="button-line" onclick="Calculate(this.form)" value=" 计算 " type="button"
+                  style="background-color: #00FFFF">
+              </td>
+              <td width="19%">
+                <p>&nbsp;1个OD260等于</p>
+              </td>
+              <td><input name="odBox" class="inp" onfocus="Disallow(this.form)" size="7">
+                <p>(pmol/ml)</p>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </form>
+    </div>
+
+</body>
+
+</html>
