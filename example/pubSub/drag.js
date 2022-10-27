@@ -2,7 +2,7 @@
  * @Author: fg
  * @Date: 2022-10-26 11:32:25
  * @LastEditors: fg
- * @LastEditTime: 2022-10-27 09:46:00
+ * @LastEditTime: 2022-10-27 11:24:12
  * @Description: drag
  */
 
@@ -29,7 +29,6 @@ class Drag {
     this.UP = this.up.bind(this);
     document.addEventListener("mousemove", this.MOVE);
     document.addEventListener("mouseup", this.UP);
-    console.log("down", this.move);
     // flag
     // 清除上一次点击形成的一些定时器和变量
     clearInterval(this.flyTimer);
