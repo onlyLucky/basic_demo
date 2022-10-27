@@ -2,7 +2,7 @@
  * @Author: fg
  * @Date: 2022-10-26 11:32:25
  * @LastEditors: fg
- * @LastEditTime: 2022-10-26 18:00:18
+ * @LastEditTime: 2022-10-27 09:46:00
  * @Description: drag
  */
 
@@ -16,6 +16,7 @@ class Drag {
     });
     // 为按下鼠标绑定事件，事件函数一定要绑定this，在封装过程中this统一指定为实例对象
     this.DOWN = this.down.bind(this);
+    this.ele.addEventListener("mousedown", this.DOWN);
   }
   down(ev) {
     let ele = this.ele;
