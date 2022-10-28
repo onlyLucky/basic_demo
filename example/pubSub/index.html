@@ -2,7 +2,7 @@
  * @Author: fg
  * @Date: 2022-10-26 11:22:15
  * @LastEditors: fg
- * @LastEditTime: 2022-10-27 11:22:49
+ * @LastEditTime: 2022-10-28 10:39:29
  * @Description: pubsub
 -->
 <!DOCTYPE html>
@@ -12,8 +12,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>运动小球</title>
-  <script src="./drag.js"></script>
+  <!-- <script src="./drag.js"></script> -->
   <script src="./subscribe.js"></script>
+  <script src="./Drags.js"></script>
+  <script src="./dragExtend.js"></script>
   <style>
     html, body {
       height: 100%;
@@ -35,7 +37,11 @@
 <body>
   <div id="box"></div>
   <script>
-    let drag = new Drag(document.getElementById("box"));
+    window.onload = function(){
+      let drag = new Drag(document.getElementById("box"));
+      extendDrag(drag);
+    }
+    
     let subscribe = new Subscribe();
     let fn1 = function(x,y){
       console.log(1,x,y)
