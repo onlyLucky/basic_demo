@@ -1,0 +1,133 @@
+<!--
+ * @Author: fg
+ * @Date: 2022-12-07 16:42:41
+ * @LastEditors: fg
+ * @LastEditTime: 2022-12-07 16:48:33
+ * @Description: content
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+	<style>
+		:root{
+			--foo: red;
+			--border: 1px solid green;
+		}
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		body{
+			box-sizing: border-box;
+		}
+		.parent{
+			box-sizing: border-box;
+			width: 100px;
+			height: 100px;
+			border: var(--border);
+			transform-origin: 0 0;
+			position: relative;
+			
+		}
+		.imgStyle{
+			width: 100px;
+			height: 100px;
+		}
+	</style>
+</head>
+<body style="position: relative;">
+	<div class="parent">
+		<img src="https://qzonestyle.gtimg.cn/qz-proj/weishi-mobile/img/integral/bind/fail.png?nowebp" class="imgStyle" />
+	</div>
+	<script type="text/javascript">
+		///////////////////////////////////////
+		let orgData = null, nowScale = 1, x, y, twoSig, leftNum = 0, topNum = 0,leftNumfalse, topNumfalse, nowScalefalse;
+		let SingleFinger = null, singLeft, singTop, oneSig;
+		const parentNode = document.querySelector('.parent');
+		function getOrigin(e){
+			if(e.touches.length == 2){
+				// 双指
+				const org = {
+					x: (e.touches[0].pageX - 2 * leftNum + e.touches[1].pageX) / 2,
+					y: (e.touches[0].pageY - 2 * topNum + e.touches[1].pageY) / 2,
+					distance: Math.sqrt(Math.pow(e.touches[0].pageX - e.touches[1].pageX, 2) + Math.pow(e.touches[0].pageY - e.touches[1].pageY, 2))
+				}
+				return org;
+			}else if(e.touches.length == 1){
+				//单指
+				return {
+					x: e.touches[0].pageX,
+					y: e.touches[0].pageY
+				}
+			}
+		}
+		parentNode.addEventListener('touchstart', (e) => {
+			if(e.touches.length == 2){
+				let flag = true;
+				for(let i = 0; i < e.touches.length; i++){
+					if(e.touches[i].target.nodeName != 'IMG'){
+						flag = false;
+					}
+				}
+				if(flag) {
+					//获取双指刚放到屏幕的中心点
+					twoSig = true;
+					orgData = getOrigin(e);
+					x = getOrigin(e).x;
+					y = getOrigin(e).y;
+				}
+			}else if(e.touches.length == 1){
+				oneSig = true;
+				SingleFinger = getOrigin(e);
+			}
+		})
+		parentNode.addEventListener('touchmove', (e) => {
+			e.preventDefault();
+			if(e.touches.length == 2){
+				if(twoSig){
+					let flag = true;
+					for(let i = 0; i < e.touches.length; i++){
+						if(e.touches[i].target.nodeName != 'IMG'){
+							flag = false;
+						}
+					}
+					if(flag) {
+						// 获取新的两指中心点
+						const nowOrg = getOrigin(e);
+						const scale = nowOrg.distance / orgData.distance;
+						if(scale * nowScale < 1) return false;
+						// 获取放大后的中心点位置1
+						const obj = {
+							x: orgData.x * scale,
+							y: orgData.y * scale
+						}
+						parentNode.style.transform = `matrix(${scale * nowScale}, 0, 0, ${scale * nowScale}, ${nowOrg.x + leftNum - obj.x}, ${nowOrg.y + topNum - obj.y})`;
+						leftNumfalse = nowOrg.x + leftNum - obj.x;
+						topNumfalse = nowOrg.y + topNum - obj.y;
+						nowScalefalse = scale * nowScale;
+					}
+				}
+			}else if(e.touches.length == 1){
+				if(oneSig){
+					const nowObj = {
+						x: e.touches[0].pageX,
+						y: e.touches[0].pageY
+					}
+					parentNode.style.transform = `matrix(${nowScalefalse}, 0, 0, ${nowScalefalse}, ${nowObj.x - SingleFinger.x + leftNum}, ${nowObj.y - SingleFinger.y + topNum})`;
+					leftNumfalse = nowObj.x - SingleFinger.x + leftNum;
+					topNumfalse = nowObj.y - SingleFinger.y + topNum;
+				}
+			}
+		})
+		parentNode.addEventListener('touchend', (e) => {
+			parentNode.style.transform = `matrix(${nowScalefalse}, 0, 0, ${nowScalefalse}, ${leftNumfalse}, ${topNumfalse})`;
+			leftNum = leftNumfalse;
+			topNum = topNumfalse;
+			nowScale = nowScalefalse;
+		})
+	</script>
+</body>
+</html>
