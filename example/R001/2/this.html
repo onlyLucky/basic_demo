@@ -1,24 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>this</title>
 </head>
+
 <body>
   <script>
     // 作为对象的方法调用
 
     var obj = {
       a: 1,
-      getA: function(){
-        alert ( this === obj );    // 输出：true
-        alert ( this.a );    // 输出： 1
+      getA: function () {
+        console.log(this === obj);    // 输出：true
+        console.log(this.a);    // 输出： 1
       }
     };
 
     obj.getA();
+
+    // 作为普通函数调用
+    window.name = 'globalName';
+    var myObject = {
+      name: 'sven',
+      getName: function () {
+        return this.name;
+      }
+    };
+
+    var getName = myObject.getName;
+    console.log(getName());    // globalName
   </script>
 </body>
+
 </html>

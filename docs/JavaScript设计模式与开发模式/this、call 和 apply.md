@@ -9,6 +9,8 @@
 - [目录](#目录)
 - [简介](#简介)
 - [1.this](#1this)
+  - [1.1 作为对象的方法调用。](#11-作为对象的方法调用)
+  - [1.2 作为普通函数调用。](#12-作为普通函数调用)
 
 ## 简介
 
@@ -28,3 +30,36 @@
 - 作为普通函数调用
 - 构造器调用。
 - `Function.prototype.call` 或 `Function.prototype.apply` 调用。
+
+### 1.1 作为对象的方法调用。
+
+```js
+var obj = {
+  a: 1,
+  getA: function () {
+    console.log(this === obj); // 输出：true
+    console.log(this.a); // 输出： 1
+  },
+};
+
+obj.getA();
+```
+
+当前对象中的 this 指向当前对象
+
+### 1.2 作为普通函数调用。
+
+```js
+window.name = "globalName";
+var myObject = {
+  name: "sven",
+  getName: function () {
+    return this.name;
+  },
+};
+
+var getName = myObject.getName;
+console.log(getName()); // globalName
+```
+
+此时的 this 总是指向全局对象。在浏览器的 JavaScript 里，这个全局对象是 window 对象。即使当前对象中属性值为函数
